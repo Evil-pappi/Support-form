@@ -9,7 +9,9 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+
+// Serve static files from 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Support form route
 app.post('/api/support', async (req, res) => {
@@ -45,6 +47,12 @@ Note: ${note || 'None'}
   }
 });
 
+// Serve index.html on root path
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);});
+  console.log(`Server running at http://localhost:${PORT}`);
+});
